@@ -264,6 +264,71 @@
     color: var(--text-secondary);
 }
 
+/* Easter Egg Styling */
+.home-easter-egg {
+    max-width: 720px;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(238, 105, 131, 0.05) 0%, rgba(108, 92, 231, 0.05) 100%);
+    border: 1px solid rgba(238, 105, 131, 0.2);
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.home-easter-egg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(238, 105, 131, 0.4), transparent);
+}
+
+.easter-egg-content {
+    position: relative;
+    z-index: 1;
+}
+
+.easter-egg-sparkle {
+    display: block;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.easter-egg-quote {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    font-family: 'Outfit', serif;
+}
+
+.easter-egg-movie {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-secondary);
+    opacity: 0.8;
+}
+
 @media (max-width: 768px) {
     .home-headline {
         font-size: 1.75rem;

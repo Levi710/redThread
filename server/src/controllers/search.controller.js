@@ -132,11 +132,30 @@ async function handleSearch(req, res, next) {
         ]);
         logger.info('AI ranking complete', { topCount: rankedResults.length });
 
+        // --- Easter Egg: Your Name (Kimi no Na wa) ---
+        const quotes = [
+            "Musubi is the old way of calling the guardian god. To tie thread is Musubi. To connect people is Musubi. The flow of time is Musubi.",
+            "I’m always searching for something, a person, a place... I don't know what it is or where it is, but I know it's important to me...",
+            "Treasure the experience. Dreams fade away after you wake up.",
+            "Wherever you are in the world, I'll search for you.",
+            "It's like a dream. It's like a miracle.",
+            "The names are... Mitsuha! Taki!",
+            "Once in a while when I wake up. I find myself crying."
+        ];
+
+        const isEasterEgg = query.toLowerCase().includes('your name') ||
+            query.toLowerCase().includes('kimi no na wa') ||
+            (intent.reasoning && intent.reasoning.toLowerCase().includes('kimi no na wa')) ||
+            (intent.reasoning && intent.reasoning.toLowerCase().includes('your name'));
+
+        const easterEgg = isEasterEgg ? quotes[Math.floor(Math.random() * quotes.length)] : null;
+
         success(res, {
             query,
             intent,
             results: rankedResults,
             dynamicFilters,
+            easterEgg,
             meta: {
                 ...data.meta,
                 total: rankedResults.length,

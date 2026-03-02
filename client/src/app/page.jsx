@@ -28,6 +28,7 @@ function SearchContent() {
     const [selectedResult, setSelectedResult] = useState(null);
     const [scopeMessage, setScopeMessage] = useState(null);
     const [clarification, setClarification] = useState(null);
+    const [easterEgg, setEasterEgg] = useState(null);
 
     const { addEntry, history } = useSearchHistory();
     const { addToast } = useToast();
@@ -62,6 +63,8 @@ function SearchContent() {
         setLoadingMsg('Searching...');
         setError(null);
         setScopeMessage(null);
+        setClarification(null);
+        setEasterEgg(null);
         setHasSearched(true);
 
         const timeoutId = setTimeout(() => {
@@ -91,6 +94,7 @@ function SearchContent() {
             setResults(res);
             setIntent(data.intent || null);
             setMeta(data.meta || null);
+            setEasterEgg(data.easterEgg || null);
             setDynamicFilters(data.dynamicFilters || []);
             setFilters({});
             addEntry(query, data.intent, res.length);
@@ -270,6 +274,16 @@ function SearchContent() {
                         {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
                     </div>
                 </section>
+            )}
+
+            {easterEgg && !loading && (
+                <div className="home-easter-egg fade-in-up">
+                    <div className="easter-egg-content">
+                        <span className="easter-egg-sparkle">✨</span>
+                        <p className="easter-egg-quote">"{easterEgg}"</p>
+                        <span className="easter-egg-movie">— Kimi no Na wa (Your Name)</span>
+                    </div>
+                </div>
             )}
 
             {!loading && hasSearched && results.length > 0 && (
