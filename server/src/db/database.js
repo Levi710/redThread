@@ -2,7 +2,11 @@ const sqlite3 = require('sqlite3').verbose();
 const { open } = require('sqlite');
 const path = require('path');
 
-const dbPath = path.resolve(__dirname, 'locations.sqlite');
+// Hugging Face Persistent Storage path is typically at /data if configured in the Space settings
+const PERSISTENT_DATA_PATH = '/data/locations.sqlite';
+const LOCAL_DATA_PATH = path.resolve(__dirname, 'locations.sqlite');
+
+const dbPath = require('fs').existsSync('/data') ? PERSISTENT_DATA_PATH : LOCAL_DATA_PATH;
 
 let dbInstance = null;
 
