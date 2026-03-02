@@ -39,10 +39,9 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 EXPOSE 7860
 
-# Hugging Face Spaces non-root user (id 1000)
-RUN useradd -m -u 1000 user
-RUN chown -R user:user /app /client
-USER user
+# Hugging Face Spaces runs as UID 1000. The 'node' image already has a 'node' user with this ID.
+RUN chown -R node:node /app /client
+USER node
 
 # Run the server
 CMD ["node", "src/index.js"]
