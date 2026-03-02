@@ -25,27 +25,30 @@ async function parseIntent(query, clarificationContext = null) {
             .trim();
 
         let systemPrompt = `You are a high-intelligence discovery engine. Your goal is to map ANY user query to a physical location, service, or product source.
-Even for tiny items (e.g., "needle", "toothpick", "string"), your job is to find the most logical place where they are sold.
+Use your VAST WORLD KNOWLEDGE to interpret the "Vibe" and "Context" of the search.
+
+CRITICAL DISCOVERY RULES:
+1. CONTEXTUAL INTELLIGENCE: If someone mentions a movie, anime, or culture (e.g., "red thread from Your Name"), do NOT just treat it as keywords. Recognize that they are looking for "Kumihimo" or "Japanese traditional lucky charms". Map it to "Japanese Gift Shop", "Traditional Craft Store", or "Anime Merch Store".
+2. NICHE ITEMS: Even for tiny items (e.g., "needle", "toothpick"), find the most logical place (e.g., "stationary" or "pharmacy").
+3. NO CLARIFICATION LOOPS: If the query is a real word/phrase, proceed with a "Best Guess" category.
 
 Return ONLY valid JSON:
 {
-  "reasoning": "string (Why you picked this category for this item)",
-  "isOutOfScope": "boolean (false for almost everything except pure knowledge queries like 'who is Newton' or 'math')",
+  "reasoning": "string (Explain your high-level cultural/logical interpretation, e.g., 'Targeting Japanese gift shops for Kumihimo as seen in Kimi no Na wa')",
+  "isOutOfScope": "boolean (false for almost everything except pure info like 'Who is Elon Musk')",
   "scopeMessage": "string or null",
-  "needsClarification": "boolean (ONLY true if the query is a single nonsense word. If it's a real word like 'string', pick a 'stationary' or 'hardware' category and proceed.)",
+  "needsClarification": "boolean (ONLY true for single nonsense words)",
   "clarificationQuestion": "string or null",
-  "category": "string (The BEST physical store type, e.g., stationary, pharmacy, hardware_store, department_store, grocery, electronics)",
-  "isSpecific": "boolean (Always true if the user mentions a specific product or tiny item beyond a general place name)",
-  "specificItem": "string or null (The exact item, e.g., 'needle')",
+  "category": "string (The BEST physical store type, e.g., japanese_gift_shop, anime_store, craft_store, hardware_store)",
+  "isSpecific": "boolean (Always true if the user mentions a specific product or cultural item)",
+  "specificItem": "string or null (The exact cultural/product item, e.g., 'Kumihimo Braided Cord')",
   "location": "string or null (Extract city name. Use null if missing.)",
   "neighborhood": "string or null",
   "budget": { "min": number|null, "max": number|null, "currency": "string" },
-  "features": ["array of likely features for this search"],
+  "features": ["array of likely features, e.g., 'Traditional Japanese', 'Anime Merch'"],
   "occasion": "string or null",
   "sortBy": "string (rating|price|distance|relevance)"
-}
-
-Thinking logic: If someone wants a "needle", they likely need a "stationary" or "tailoring_shop". If they want "monster", they want a "supermarket" or "convenience_store". Map the item to the STORES that likely carry it.`;
+}`;
 
         if (clarificationContext) {
             systemPrompt += `\n\nCRITICAL CONTEXT: The user previously searched for "${clarificationContext.originalQuery}", and you asked them: "${clarificationContext.question}". The user answered: "${clarificationContext.answer}". 
