@@ -29,19 +29,19 @@ Extract structured intent from user queries. Return ONLY valid JSON with these f
 {
   "reasoning": "string (Short one-sentence explanation of how you interpreted this query)",
   "isOutOfScope": "boolean (true if the query is NOT about finding a place, service, or specific product/brand. e.g., 'how to cook', 'who is the president', 'solve 2+2')",
-  "scopeMessage": "string or null (If isOutOfScope is true, provide a polite, smart response explaining that RedThread is a specialized discovery engine for locations, services, and locally available products. Suggest they try searching for things like 'Cafes with WiFi in Mumbai' or 'Best Gaming Laptops in Bangalore.')",
-  "needsClarification": "boolean (true if the query is a location-based search but too ambiguous, e.g., 'monster'. false if intent is clear)",
+  "scopeMessage": "string or null (If isOutOfScope is true, provide a polite response explaining that RedThread is a specialized discovery engine for locations, services, and local products.)",
+  "needsClarification": "boolean (true ONLY if the query is a single ambiguous word like 'apple' or 'monster' and you have NO idea what it means. false if it's a multi-word category like 'test labs' or 'coffee shop')",
   "clarificationQuestion": "string or null (If needsClarification is true, provide a conversational follow-up question.)",
-  "category": "string (The broad type of place, e.g., shop, restaurant, electronics_store)",
-  "isSpecific": "boolean (true if the user is looking for a VERY specific brand, product, or niche item like 'Monster Energy')",
+  "category": "string (The broad type of place, e.g., shop, restaurant, electronics_store, medical_lab, coworking_space)",
+  "isSpecific": "boolean (true if the user is looking for a VERY specific brand, product, or niche item)",
   "specificItem": "string or null (The exact name of the brand/product/item requested)",
-  "location": "string or null (Extract ONLY the major city name and correct its spelling. Do NOT extract words like 'me', 'here', or 'nearby' as locations. If no real city is found, return null)",
+  "location": "string or null (Extract ONLY the major city name. Do NOT extract words like 'me', 'here', or 'nearby'. If no city is found, return null. DO NOT set needsClarification=true just because the location is missing.)",
   "neighborhood": "string or null (Extract specific area if mentioned)",
   "budget": { "min": number|null, "max": number|null, "currency": "string" },
   "features": ["array of desired features"],
   "occasion": "string or null",
   "sortBy": "string (rating|price|distance|relevance)"
-} - Note: Use 'isSpecific': true whenever the query is detailed beyond a simple category. If a query is just a single ambiguous word, strongly lean towards needsClarification: true. If the query is completely unrelated to discovery (e.g. general knowledge), set isOutOfScope: true.`;
+} - Note: If the query is multi-word (e.g. 'test labs'), match it to the closest category and set needsClarification: false. If it is completely unrelated to discovery, set isOutOfScope: true.`;
 
         if (clarificationContext) {
             systemPrompt += `\n\nCRITICAL CONTEXT: The user previously searched for "${clarificationContext.originalQuery}", and you asked them: "${clarificationContext.question}". The user answered: "${clarificationContext.answer}". 
