@@ -132,7 +132,7 @@ async function handleSearch(req, res, next) {
         ]);
         logger.info('AI ranking complete', { topCount: rankedResults.length });
 
-        // --- Easter Egg: Your Name (Kimi no Na wa) ---
+        // --- Discovery Quotes (Your Name & Inspiration) ---
         const quotes = [
             "Musubi is the old way of calling the guardian god. To tie thread is Musubi. To connect people is Musubi. The flow of time is Musubi.",
             "I’m always searching for something, a person, a place... I don't know what it is or where it is, but I know it's important to me...",
@@ -140,15 +140,20 @@ async function handleSearch(req, res, next) {
             "Wherever you are in the world, I'll search for you.",
             "It's like a dream. It's like a miracle.",
             "The names are... Mitsuha! Taki!",
-            "Once in a while when I wake up. I find myself crying."
+            "Once in a while when I wake up. I find myself crying.",
+            "I wanted to tell you that... wherever you may end up in this world, I will search for you.",
+            "There's no way we could meet. But one thing is certain. If we see each other, we'll know. That you were the one who lived inside me. That I am the one who lived inside you."
         ];
 
-        const isEasterEgg = query.toLowerCase().includes('your name') ||
+        const isMovieQuery = query.toLowerCase().includes('your name') ||
             query.toLowerCase().includes('kimi no na wa') ||
             (intent.reasoning && intent.reasoning.toLowerCase().includes('kimi no na wa')) ||
             (intent.reasoning && intent.reasoning.toLowerCase().includes('your name'));
 
-        const easterEgg = isEasterEgg ? quotes[Math.floor(Math.random() * quotes.length)] : null;
+        // Activate quote if results are 0 (to cheer up the user) OR if it's a specific movie query
+        const easterEgg = (isMovieQuery || rankedResults.length === 0)
+            ? quotes[Math.floor(Math.random() * quotes.length)]
+            : null;
 
         success(res, {
             query,
