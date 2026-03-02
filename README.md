@@ -1,3 +1,12 @@
+---
+title: RedThread
+emoji: 🕸️
+colorFrom: red
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # RedThread
 
 **AI-assisted location-based recommendation platform** that combines intelligent intent parsing, safety validation, and structured data extraction.
