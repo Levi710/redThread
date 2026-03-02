@@ -182,8 +182,13 @@ export default function SearchBar({
                     </button>
                 </div>
             ) : (
-                <div className="location-hint">
-                    Tip: include your city in the search or use your location
+                <div className="searchbar-hints">
+                    <div className="location-hint">
+                        Tip: include your city in the search or use your location
+                    </div>
+                    <div className="easter-egg-hint">
+                        Psst... try searching for something from <span>Your Name</span> ✨
+                    </div>
                 </div>
             )}
         </div>

@@ -13,12 +13,32 @@
     /* Ensure searchbar is above siblings like location-active-plate */
 }
 
-.location-hint {
+.searchbar-hints {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     margin-top: 0.6rem;
-    margin-left: 0.15rem;
+    padding: 0 0.25rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.location-hint {
     font-size: 0.8rem;
-    color: var(--text-secondary);
-    max-width: 720px;
+    color: var(--text-muted);
+}
+
+.easter-egg-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.easter-egg-hint span {
+    color: var(--accent-secondary);
+    font-weight: 600;
+    font-style: normal;
 }
 
 .location-hint .mono {
