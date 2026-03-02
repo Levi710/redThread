@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SearchBar from '../components/SearchBar';
 import ResultCard from '../components/ResultCard';
@@ -15,9 +15,7 @@ import { search } from '../api/client';
 import { useGeolocation } from '../hooks/useGeolocation';
 import './Home.css';
 
-const DEFAULT_FILTERS = { category: 'all', maxBudget: '', features: [], sortBy: 'relevance' };
-
-export default function Home() {
+function SearchContent() {
     const [results, setResults] = useState([]);
     const [intent, setIntent] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -40,8 +38,6 @@ export default function Home() {
         const rerunQuery = searchParams.get('rerunQuery');
         if (rerunQuery) {
             handleSearch(rerunQuery);
-            // In Next.js, updating the URL without reloading is done via router.replace
-            // but for now, we'll just handle the search.
         }
     }, [searchParams]);
 
@@ -68,21 +64,17 @@ export default function Home() {
         setScopeMessage(null);
         setHasSearched(true);
 
-        // Show auto-scraping message if backend takes longer than 3 seconds
         const timeoutId = setTimeout(() => {
             setLoadingMsg('Scraping fresh data from the web (this may take 10-15s)...');
         }, 3000);
 
         try {
-            // Include `userLocation` dynamically if the user has requested it
             const data = await search(query, null, filters, userLocation, clarificationContext);
             clearTimeout(timeoutId);
 
             if (data.isOutOfScope) {
                 setScopeMessage(data.scopeMessage);
                 setResults([]);
-                setIntent(data.intent || null);
-                setMeta(null);
                 setLoading(false);
                 return;
             }
@@ -90,14 +82,11 @@ export default function Home() {
             if (data.needsClarification) {
                 setClarification({ originalQuery: query, question: data.clarificationQuestion });
                 setResults([]);
-                setIntent(null);
-                setMeta(null);
                 setLoading(false);
                 return;
             }
 
             setClarification(null);
-
             const res = data.results || [];
             setResults(res);
             setIntent(data.intent || null);
@@ -111,7 +100,6 @@ export default function Home() {
             setError(errorMsg);
             addToast(errorMsg, 'error');
             setResults([]);
-            setIntent(null);
         } finally {
             setLoading(false);
         }
@@ -119,7 +107,6 @@ export default function Home() {
 
     const filteredResults = useMemo(() => {
         let filtered = [...results];
-
         dynamicFilters.forEach(schema => {
             const val = filters[schema.id];
             if (!val) return;
@@ -153,16 +140,9 @@ export default function Home() {
                         if (!pa) return 1; if (!pb) return -1;
                         return pa - pb;
                     });
-                } else if (val === 'price_high') {
-                    filtered.sort((a, b) => {
-                        const pa = parseInt(a.priceRange?.match(/([₹$£€])(\d+)/)?.[2] || '0', 10);
-                        const pb = parseInt(b.priceRange?.match(/([₹$£€])(\d+)/)?.[2] || '0', 10);
-                        return pb - pa;
-                    });
                 }
             }
         });
-
         return filtered;
     }, [results, filters, dynamicFilters]);
 
@@ -338,5 +318,20 @@ export default function Home() {
                 <ResultModal result={selectedResult} onClose={() => setSelectedResult(null)} />
             )}
         </main>
+    );
+}
+
+export default function Home() {
+    return (
+        <Suspense fallback={
+            <main className="home">
+                <section className="home-hero">
+                    <div className="home-hero-glow"></div>
+                    <h2 className="home-headline fade-in-up">Initializing RedThread...</h2>
+                </section>
+            </main>
+        }>
+            <SearchContent />
+        </Suspense>
     );
 }
