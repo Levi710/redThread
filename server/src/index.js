@@ -14,10 +14,21 @@ const path = require('path');
 
 const app = express();
 
-// Security Middleware
-app.use(helmet());
+// Security Middleware (Relaxed for Hugging Face Iframe)
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "frame-ancestors": ["'self'", "https://huggingface.co", "https://*.hf.space"],
+            "script-src": ["'self'", "'unsafe-inline'"],
+            "img-src": ["'self'", "data:", "https:"]
+        },
+    },
+    frameguard: false // Required for HF Spaces to work inside its iframe
+}));
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: '*', // Allow all origins in production for the Space
     methods: ['GET', 'POST']
 }));
 
