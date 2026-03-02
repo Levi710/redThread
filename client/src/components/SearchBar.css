@@ -1,0 +1,277 @@
+.searchbar-container {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 100;
+}
+
+.searchbar {
+    display: flex;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 10;
+    /* Ensure searchbar is above siblings like location-active-plate */
+}
+
+.location-hint {
+    margin-top: 0.6rem;
+    margin-left: 0.15rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    max-width: 720px;
+}
+
+.location-hint .mono {
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-size: 0.78rem;
+}
+
+.searchbar-input-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.location-active-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: flex-start;
+    margin-top: 0.75rem;
+    margin-left: 1rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(238, 105, 131, 0.1);
+    border: 1px solid rgba(238, 105, 131, 0.2);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.active-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+.clear-location-text {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.clear-location-text:hover {
+    color: #ff7675;
+    text-decoration-color: #ff7675;
+}
+
+
+
+.location-btn {
+    position: absolute;
+    left: 10px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.location-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.location-btn.active {
+    color: var(--primary-color);
+}
+
+.location-btn:not(.active):not(.error):not(:disabled) {
+    animation: pulse-hint 3s infinite;
+}
+
+@keyframes pulse-hint {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+        filter: brightness(1.3);
+        color: var(--accent-primary);
+    }
+
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+.location-btn.error {
+    color: #ff7675;
+}
+
+.location-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Consolidated search input styling */
+.searchbar-input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all var(--transition-normal);
+}
+
+.searchbar-input::placeholder {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.searchbar-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(238, 105, 131, 0.15);
+}
+
+.searchbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: var(--accent-gradient);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+}
+
+.searchbar-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--accent-glow);
+}
+
+.searchbar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.searchbar-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.searchbar-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #850E35;
+    /* Opaque background to prevent overlap bleed-through */
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    list-style: none;
+    z-index: 9999;
+    overflow: hidden;
+    animation: fadeInUp 150ms ease;
+    backdrop-filter: blur(10px);
+}
+
+.searchbar-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    font-size: 0.85rem;
+}
+
+.searchbar-suggestion:hover,
+.searchbar-suggestion.active {
+    background: rgba(238, 105, 131, 0.1);
+}
+
+.suggestion-type-icon {
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.suggestion-text {
+    flex: 1;
+    color: var(--text-primary);
+}
+
+.suggestion-cat {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    background: rgba(238, 105, 131, 0.12);
+    color: var(--accent-secondary);
+}
+
+.searchbar-suggestion.is-history {
+    color: var(--text-secondary);
+}
+
+.searchbar-suggestion.is-history svg {
+    color: var(--text-muted);
+}
+
+
+.suggestion-tag {
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .searchbar {
+        flex-direction: column;
+    }
+
+    .searchbar-btn {
+        justify-content: center;
+    }
+}

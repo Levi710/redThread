@@ -1,0 +1,70 @@
+.error-boundary-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--bg-primary);
+    text-align: center;
+}
+
+.error-boundary-content {
+    max-width: 480px;
+    background: var(--bg-card);
+    padding: 3rem 2rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.error-boundary-icon {
+    color: #ff7675;
+    filter: drop-shadow(0 0 12px rgba(255, 118, 117, 0.2));
+}
+
+.error-boundary-content h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.error-boundary-content p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.error-boundary-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.error-boundary-btn:hover {
+    background: var(--bg-input);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+}
+
+.error-boundary-details {
+    margin-top: 1.5rem;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 118, 117, 0.1);
+}
