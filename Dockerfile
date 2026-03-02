@@ -28,10 +28,8 @@ COPY server/package*.json ./
 RUN npm install
 COPY server/ .
 
-# Copy Client build (the server expects it at ../client/dist relative to server/src/index.js)
-# In this single container setup at /app, it will be at /app/../client/dist ??
-# Let's adjust server's clientPath logic slightly or copy it to /client/dist
-COPY --from=client-builder /client/dist /client/dist
+# Copy Client build (the server expects it at ../client/out relative to server/src/index.js)
+COPY --from=client-builder /client/out /client/out
 
 # Environment
 ENV PORT=7860

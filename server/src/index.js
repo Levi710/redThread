@@ -46,7 +46,7 @@ app.use(rateLimiter);
 app.use('/api', routes);
 
 // Serve Static Files for Deployment
-const clientPath = path.join(__dirname, '../../client/dist');
+const clientPath = path.join(__dirname, '../../client/out');
 app.use(express.static(clientPath));
 
 // Handle React SPA routing
