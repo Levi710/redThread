@@ -37,11 +37,23 @@ app.get('/', (req, res) => {
     });
 });
 
+const path = require('path');
+
 // Routes
 app.use('/api/search', searchRoutes);
 app.use(rateLimiter);
 
 app.use('/api', routes);
+
+// Serve Static Files for Deployment
+const clientPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientPath));
+
+// Handle React SPA routing
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientPath, 'index.html'));
+});
 
 app.use((req, res) => {
     res.status(404).json({ success: false, error: 'Route not found' });
