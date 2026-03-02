@@ -14,8 +14,8 @@ export default function useSearchHistory() {
             if (stored) {
                 setHistory(JSON.parse(stored));
             }
-        } catch (e) {
-            console.warn('Could not load history from localStorage', e);
+        } catch (err) {
+            console.warn('Could not load history from localStorage', err);
         }
         setMounted(true);
     }, []);
@@ -25,7 +25,7 @@ export default function useSearchHistory() {
         if (!mounted) return;
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-        } catch (e) {
+        } catch (err) {
             /* quota exceeded — silently fail */
         }
     }, [history, mounted]);

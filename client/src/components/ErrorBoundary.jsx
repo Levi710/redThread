@@ -33,7 +33,7 @@ class ErrorBoundary extends React.Component {
                         >
                             Reload Page
                         </button>
-                        {process.env.NODE_ENV === 'development' && (
+                        {typeof window !== 'undefined' && window.location.hostname === 'localhost' && (
                             <pre className="error-boundary-details">{this.state.error?.toString()}</pre>
                         )}
                     </div>
