@@ -83,10 +83,15 @@ async function handleSearch(req, res, next) {
         const checkSatisfaction = () => {
             if (!intent.isSpecific || !intent.specificItem) return true;
             const item = intent.specificItem.toLowerCase();
-            return data.results.some(r =>
-                r.name.toLowerCase().includes(item) ||
-                (r.features && r.features.some(f => f.toLowerCase().includes(item)))
-            );
+            return data.results.some(r => {
+                const searchSpace = [
+                    r.name,
+                    ...(r.features || []),
+                    r.rawCategory || '',
+                    r.reviewSummary || ''
+                ].join(' ').toLowerCase();
+                return searchSpace.includes(item);
+            });
         };
 
         const isDeeplySatisfied = checkSatisfaction();

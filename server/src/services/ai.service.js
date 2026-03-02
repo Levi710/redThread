@@ -24,24 +24,28 @@ async function parseIntent(query, clarificationContext = null) {
             .replace(/\b(near me|around me|close to me|nearby|here)\b/gi, '')
             .trim();
 
-        let systemPrompt = `You are a query intent parser for a location-based recommendation engine.
-Extract structured intent from user queries. Return ONLY valid JSON with these fields:
+        let systemPrompt = `You are a high-intelligence discovery engine. Your goal is to map ANY user query to a physical location, service, or product source.
+Even for tiny items (e.g., "needle", "toothpick", "string"), your job is to find the most logical place where they are sold.
+
+Return ONLY valid JSON:
 {
-  "reasoning": "string (Short one-sentence explanation of how you interpreted this query)",
-  "isOutOfScope": "boolean (true if the query is NOT about finding a place, service, or specific product/brand. e.g., 'how to cook', 'who is the president', 'solve 2+2')",
-  "scopeMessage": "string or null (If isOutOfScope is true, provide a polite response explaining that RedThread is a specialized discovery engine for locations, services, and local products.)",
-  "needsClarification": "boolean (true ONLY if the query is a single ambiguous word like 'apple' or 'monster' and you have NO idea what it means. false if it's a multi-word category like 'test labs' or 'coffee shop')",
-  "clarificationQuestion": "string or null (If needsClarification is true, provide a conversational follow-up question.)",
-  "category": "string (The broad type of place, e.g., shop, restaurant, electronics_store, medical_lab, coworking_space)",
-  "isSpecific": "boolean (true if the user is looking for a VERY specific brand, product, or niche item)",
-  "specificItem": "string or null (The exact name of the brand/product/item requested)",
-  "location": "string or null (Extract ONLY the major city name. Do NOT extract words like 'me', 'here', or 'nearby'. If no city is found, return null. DO NOT set needsClarification=true just because the location is missing.)",
-  "neighborhood": "string or null (Extract specific area if mentioned)",
+  "reasoning": "string (Why you picked this category for this item)",
+  "isOutOfScope": "boolean (false for almost everything except pure knowledge queries like 'who is Newton' or 'math')",
+  "scopeMessage": "string or null",
+  "needsClarification": "boolean (ONLY true if the query is a single nonsense word. If it's a real word like 'string', pick a 'stationary' or 'hardware' category and proceed.)",
+  "clarificationQuestion": "string or null",
+  "category": "string (The BEST physical store type, e.g., stationary, pharmacy, hardware_store, department_store, grocery, electronics)",
+  "isSpecific": "boolean (Always true if the user mentions a specific product or tiny item beyond a general place name)",
+  "specificItem": "string or null (The exact item, e.g., 'needle')",
+  "location": "string or null (Extract city name. Use null if missing.)",
+  "neighborhood": "string or null",
   "budget": { "min": number|null, "max": number|null, "currency": "string" },
-  "features": ["array of desired features"],
+  "features": ["array of likely features for this search"],
   "occasion": "string or null",
   "sortBy": "string (rating|price|distance|relevance)"
-} - Note: If the query is multi-word (e.g. 'test labs'), match it to the closest category and set needsClarification: false. If it is completely unrelated to discovery, set isOutOfScope: true.`;
+}
+
+Thinking logic: If someone wants a "needle", they likely need a "stationary" or "tailoring_shop". If they want "monster", they want a "supermarket" or "convenience_store". Map the item to the STORES that likely carry it.`;
 
         if (clarificationContext) {
             systemPrompt += `\n\nCRITICAL CONTEXT: The user previously searched for "${clarificationContext.originalQuery}", and you asked them: "${clarificationContext.question}". The user answered: "${clarificationContext.answer}". 
